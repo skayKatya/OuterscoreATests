@@ -3,7 +3,7 @@ import { describe } from 'node:test';
 
 test.describe("Create Requisite", ()=>{
 
-    test.only("Create requisites with a correct data", async ({ page }) => {
+    test("Create requisites with a correct data", async ({ page }) => {
        
         // login to the web app
 
@@ -27,6 +27,11 @@ test.describe("Create Requisite", ()=>{
 
         //step 1 General Info
 
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 14);
+        const day = currentDate.getDate();
+
+
         await page.getByRole('textbox', { name: 'Example \'Scrum Master for CRM' }).click();
         await page.getByRole('textbox', { name: 'Example \'Scrum Master for CRM' }).fill('TestAQA');
         await page.locator('os-single-user-select').getByRole('combobox').click();
@@ -37,7 +42,7 @@ test.describe("Create Requisite", ()=>{
         await page.locator('os-service-tags-select').getByRole('textbox').click();
         await page.getByRole('option', { name: 'Los 01 - Kaufmännische ANÜ-' }).click();
         await page.getByRole('textbox', { name: 'Start' }).click();
-        await page.getByText('30').click()
+        await page.getByText(day.toString(), { exact: true }).click();
         await page.locator('os-field-label').filter({ hasText: 'Legal Entity* error_outline' }).getByRole('combobox').click();
         await page.getByRole('option', { name: 'EnBW Energie Baden-Wü' }).click();
         await page.locator('os-field-label').filter({ hasText: 'Department* error_outline' }).getByRole('combobox').click();

@@ -1,77 +1,58 @@
 import { test, expect } from '@playwright/test';
+import LoginPage from '../src/pageObjects/LoginPage';
 
-    test.describe("Login page", ()=>{
+    test.describe.only("Login page", ()=>{
+        let loginPage;
 
         test.beforeEach(async ({page})=>{
-            
-            await page.goto('/');
+            loginPage = new LoginPage(page);
+            await loginPage.navigate();
         })
 
-        test("'Verify login with correct data", async ({ page }) => {
+        test ("'Verify login with correct data", async ({ page }) => {
         
-            const emailInput = page.locator('.input-wrapper input[type="email"]')
-            const passwordInput = page.locator('.input-wrapper input[type="password"]')
-            const signInBtn = page.locator('.large.mat-button-base.mat-primary.mat-raised-button')
-            
-            const email = 'kateryna.rybalska@fordewind.io'
-            const password = 'KateFordewind2024!'
+            const email = 'kateryna.rybalska@fordewind.io';
+            const password = '1234!Zaqwerty1234!';
     
-            await emailInput.fill(email)   
-            await passwordInput.fill(password)
-            await signInBtn.click()
+            await loginPage.login({ email, password });
+            await expect(page).toHaveURL('dashboard')
         })
 
         test ("'Verify error about empty mandatory fields", async ({ page }) => {
 
-            const emailInput = page.locator('.input-wrapper input[type="email"]')
-            const passwordInput = page.locator('.input-wrapper input[type="password"]')
-            const signInBtn = page.locator('.large.mat-button-base.mat-primary.mat-raised-button')
-            const emailValidationMessage = page.locator('div:nth-of-type(1) > os-field-label os-field-input  .error-text.ng-star-inserted')
-            const passwordValidationMessage = page.locator('div:nth-of-type(2) > os-field-label os-field-input  .error-text.ng-star-inserted')
+            await loginPage.clickLoginButton();
 
-            await signInBtn.click()
-
-            await expect(emailValidationMessage).toHaveText('Pflichtfeld' );
-            await expect(emailInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
-            await expect(passwordValidationMessage).toHaveText('Pflichtfeld' );
-            await expect(passwordInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
+            await expect(loginPage._emailValidationMessage).toHaveText('Pflichtfeld' );
+            await expect(loginPage._emailInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
+            await expect(loginPage._passwordValidationMessage).toHaveText('Pflichtfeld' );
+            await expect(loginPage._passwordInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
          })
 
         test ("'Verify error about empty email field", async ({ page }) => {
     
-            const emailInput = page.locator('.input-wrapper input[type="email"]')
-            const passwordInput = page.locator('.input-wrapper input[type="password"]')
-            const signInBtn = page.locator('.large.mat-button-base.mat-primary.mat-raised-button')
-            const emailValidationMessage = page.locator('div:nth-of-type(1) > os-field-label os-field-input  .error-text.ng-star-inserted')
-            const password = 'KateFordewind2024!'
-    
-            await passwordInput.fill(password)
-            await signInBtn.click()
+            const password = '1234!Zaqwerty1234!';
 
-            await expect(emailValidationMessage).toHaveText('Pflichtfeld' );
-            await expect(emailInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
+            await loginPage.fill({password });
+            await loginPage.clickLoginButton();
+
+            await expect(loginPage._emailValidationMessage).toHaveText('Pflichtfeld' );
+            await expect(loginPage._emailInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
         })
 
         test ("'Verify error about empty password field", async ({ page }) => {
     
-            const emailInput = page.locator('.input-wrapper input[type="email"]')
-            const passwordInput = page.locator('.input-wrapper input[type="password"]')
-            const signInBtn = page.locator('.large.mat-button-base.mat-primary.mat-raised-button')
-            const passwordValidationMessage = page.locator('div:nth-of-type(2) > os-field-label os-field-input  .error-text.ng-star-inserted')
-            const email = 'kateryna.rybalska@fordewind.io'
+            const email = 'kateryna.rybalska@fordewind.io';
+            
+            await loginPage.fill({email});
+            await loginPage.clickLoginButton();
 
-            await emailInput.fill(email)
-            await signInBtn.click()
-
-            await expect(passwordValidationMessage).toHaveText('Pflichtfeld' );
-            await expect(passwordInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
+            await expect(loginPage._passwordValidationMessage).toHaveText('Pflichtfeld' );
+            await expect(loginPage._passwordInput).toHaveCSS('border-color', 'rgb(204, 50, 50)');
         })
 
         test("'Verify Reset password button  present", async ({ page }) => {
-    
-            const resetPasswordBtn = page.locator('.login-component-footer > a')
             
-            await expect(resetPasswordBtn).toHaveText('Passwort zurücksetzen ' );
+            await expect(loginPage._resetPasswordBtn).toHaveText('Passwort zurücksetzen ' );
         
         })
         })
