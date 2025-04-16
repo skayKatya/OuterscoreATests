@@ -18,9 +18,10 @@ export default class RequisitionPage {
         this._newRequisitionLegalEntity = page.locator('os-field-label').filter({ hasText: 'Legal Entity* error_outline' }).getByRole('combobox');
         this._newRequisitionDepartment = page.locator('os-field-label').filter({ hasText: 'Department* error_outline' }).getByRole('combobox');
         this._newRequisitionPrimaryCostCentre = page.locator('os-field-label').filter({ hasText: 'Primary Cost Centre*' }).getByRole('combobox');
-        this._newRequisitionCountry = page.locator('os-field-label').filter({ hasText: 'Please select' });
-        this._newRequisitionWorkLocation = page.locator('span').filter({ hasText: 'Start typing or select' });
+        this._newRequisitionCountry = page.locator('os-field-label').filter({ hasText: 'Country* error_outline Please' }).getByRole('combobox');
+        this._newRequisitionWorkLocation = page.locator('outerscore-inline-multiselect').filter({ hasText: 'Start typing or select' });
         this._nextButton = page.locator('right-controls-column').getByRole('button', { name: 'Next' });
+
 
     }
 
@@ -56,14 +57,15 @@ export default class RequisitionPage {
         await this._page.getByText(day.toString(), { exact: true }).click();
         await this._newRequisitionLegalEntity.click();
         await this._page.getByRole('option', { name: 'EnBW Energie Baden-Wü' }).click();
+        await this._newRequisitionCountry.click();
+        await this._page.getByRole('option', { name: 'Deutschland' }).click();
         await this._newRequisitionDepartment.click();
         await this._page.getByRole('option', { name: 'BR-AKE' }).click();
         await this._newRequisitionPrimaryCostCentre.click();
-        await this._page.getByRole('option', { name: 'AD: KAM' }).click();
-        await this._newRequisitionCountry.click();
-        await this._page.getByRole('option', { name: 'Deutschland' }).click();
+        await this._page.getByRole('option', { name: 'AD: KAM' }).click();   
         await this._newRequisitionWorkLocation.click();
         await this._page.getByText('Berlin').click();
+           
         await this._page.locator('.cdk-overlay-backdrop').click();
 
         await this._nextButton.click();

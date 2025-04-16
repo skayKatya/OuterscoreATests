@@ -29,7 +29,7 @@ test.describe.only("Create Requisite", ()=>{
         
         await requisitionPage.clickCreateRequisitionButton();
         await requisitionPage.fillGeneralInfo();
-        await requisitionPage.completeGuidedBuying();
+        await requisitionPage.proceedToGuidedBuying();
         await requisitionPage.completeJobPosting();
         await requisitionPage.submitRequisition();
 
